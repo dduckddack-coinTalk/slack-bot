@@ -1,0 +1,15 @@
+server:
+  port: 8090
+
+spring:
+  kafka:
+    consumer:
+      bootstrap-servers: http://3.90.102.135:9093
+      group-id: slack-group
+    producer:
+      bootstrap-servers: http://3.90.102.135:9093
+
+slack:
+  token: xoxb-3483719637124-3483748863972-ToUGtgboGQ7GKmezuzFn7H32
+  channel:
+    monitor: error
