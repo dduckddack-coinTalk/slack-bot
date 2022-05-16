@@ -1,5 +1,6 @@
 package com.cointalk.slackbot.service;
 
+import com.cointalk.slackbot.entity.SlackMessageData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -9,7 +10,7 @@ import org.springframework.stereotype.Service;
 public class ProducerServiceImpl implements ProducerService {
 
     private static final Logger logger = LoggerFactory.getLogger(ProducerServiceImpl.class);
-    private static final String TOPIC = "slack-topic";
+//    private static final String TOPIC = "slack-topic";
     private final KafkaTemplate<String, Object> kafkaTemplate;
 
     public ProducerServiceImpl(KafkaTemplate<String, Object> kafkaTemplate) {
@@ -17,20 +18,9 @@ public class ProducerServiceImpl implements ProducerService {
     }
 
     @Override
-    public void sendMessageToSlack(String message) {
-        logger.info(String.format("**** 카프카 생산자 데이터 **** : %s ", message));
-        this.kafkaTemplate.send(TOPIC, message);
+    public void sendMessageToSlack(SlackMessageData slackMessageData) {
+        String topic = slackMessageData.getChannel()+"-topic";
+        logger.info(String.format("**** 카프카 데이터 생산 : **** TOPIC: %s , MESSAGE: %s", topic, slackMessageData.getMessage()));
+        this.kafkaTemplate.send(topic, slackMessageData.getMessage());
     }
-
-//    private final KafkaTemplate<String, Lecture> kafkaTemplate;
-//
-//    @Autowired
-//    public ProducerServiceImpl(KafkaTemplate<String, Lecture> kafkaTemplate) {
-//        this.kafkaTemplate = kafkaTemplate;
-//    }
-//
-//        public void sendLectureData(Lecture lecture) {
-//            logger.info(String.format("**** 카프카 생산자 데이터 **** : %s ", lecture));
-//        this.kafkaTemplate.send(TOPIC, lecture);
-//    }
 }

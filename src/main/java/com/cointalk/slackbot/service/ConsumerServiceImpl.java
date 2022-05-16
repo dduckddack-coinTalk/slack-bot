@@ -1,5 +1,6 @@
 package com.cointalk.slackbot.service;
 
+import com.cointalk.slackbot.entity.SlackMessageData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -14,20 +15,42 @@ import reactor.core.publisher.Mono;
 public class ConsumerServiceImpl implements ConsumerService {
     private final Logger logger = LoggerFactory.getLogger(ConsumerServiceImpl.class);
 
-    private final test tt;
+    private final SlackMessageHandler slackMessageHandler;
 
-    public ConsumerServiceImpl(test tt) {
-        this.tt = tt;
+    public ConsumerServiceImpl(SlackMessageHandler slackMessageHandler) {
+        this.slackMessageHandler = slackMessageHandler;
     }
 
 //    @KafkaListener(topics = "slack-topic", groupId = "slack-group", containerFactory = "pushEntityKafkaListenerContainerFactory")
+
+    // slack-topic 구독
     @KafkaListener(topics = "slack-topic", groupId = "slack-group")
-    public void getMessageToSlack(@Payload String message, @Headers MessageHeaders messageHeaders) {
+    public void slackTopicConsumer(@Payload String message, @Headers MessageHeaders messageHeaders) {
         logger.info(String.format("#### 카프카 소비자 데이터 ### : %s \n### 카프카 헤더 정보 ### : %s", message, messageHeaders));
-        Mono<String> lectureMono = Mono.just(message)
-                .doOnNext(tt::slackSendMessage)
+        Mono<SlackMessageData> topicMono = Mono.just(new SlackMessageData(message, "error"))
+                .doOnNext(slackMessageHandler::slackSendMessage)
                 ;
-        lectureMono.subscribe();
+        topicMono.subscribe();
+    }
+
+    // error-topic 구독
+    @KafkaListener(topics = "error-topic", groupId = "error-group")
+    public void errorTopicConsumer(@Payload String message, @Headers MessageHeaders messageHeaders) {
+        logger.info(String.format("#### 카프카 소비자 데이터 ### : %s \n### 카프카 헤더 정보 ### : %s", message, messageHeaders));
+        Mono<SlackMessageData> topicMono = Mono.just(new SlackMessageData(message, "error"))
+                .doOnNext(slackMessageHandler::slackSendMessage)
+                ;
+        topicMono.subscribe();
+    }
+
+    // news-topic 구독
+    @KafkaListener(topics = "news-topic", groupId = "news-group")
+    public void newsTopicConsumer(@Payload String message, @Headers MessageHeaders messageHeaders) {
+        logger.info(String.format("#### 카프카 소비자 데이터 ### : %s \n### 카프카 헤더 정보 ### : %s", message, messageHeaders));
+        Mono<SlackMessageData> topicMono = Mono.just(new SlackMessageData(message, "news"))
+                .doOnNext(slackMessageHandler::slackSendMessage)
+                ;
+        topicMono.subscribe();
     }
 
 }

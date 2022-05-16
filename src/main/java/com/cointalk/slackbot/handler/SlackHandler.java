@@ -1,5 +1,6 @@
 package com.cointalk.slackbot.handler;
 
+import com.cointalk.slackbot.entity.SlackMessageData;
 import com.cointalk.slackbot.service.ProducerService;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
@@ -16,16 +17,29 @@ public class SlackHandler {
         this.producerService = producerService;
     }
 
+//    public Mono<ServerResponse> sendMessage(ServerRequest request) {
+//        String message = request.queryParam("message").get();
+//        Mono<String> slackMono = Mono.just(message)
+//                .doOnNext(producerService::sendMessageToSlack) // 카프카 프로듀서에 메시지 데이터 전달
+//                .subscribeOn(Schedulers.boundedElastic())
+//                .log();
+//
+//        return ServerResponse.ok()
+//                .contentType(MediaType.APPLICATION_JSON)
+//                .body(slackMono, String.class)
+//                .onErrorResume(error -> ServerResponse.badRequest().build())
+//                ;
+//    }
+
     public Mono<ServerResponse> sendMessage(ServerRequest request) {
-        String message = request.queryParam("message").get();
-        Mono<String> slackMono = Mono.just(message)
+        Mono<SlackMessageData> slackMono = request.bodyToMono(SlackMessageData.class)
                 .doOnNext(producerService::sendMessageToSlack) // 카프카 프로듀서에 메시지 데이터 전달
                 .subscribeOn(Schedulers.boundedElastic())
                 .log();
 
         return ServerResponse.ok()
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(slackMono, String.class)
+                .body(slackMono, SlackMessageData.class)
                 .onErrorResume(error -> ServerResponse.badRequest().build())
                 ;
     }
