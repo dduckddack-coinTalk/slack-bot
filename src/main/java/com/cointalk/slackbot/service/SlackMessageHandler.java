@@ -13,18 +13,6 @@ import java.io.IOException;
 @Service
 @Slf4j
 public class SlackMessageHandler {
-//    @Value(value = "${slack.token}")
-//    String token;
-//    @Value(value = "${slack.channel.monitor}")
-//    String channel;
-//    public void slackSendMessage(String message){
-//        try{
-//            Slack slack = Slack.getInstance();
-//            slack.methods(token).chatPostMessage(req -> req.channel("news").text(message));
-//        } catch (SlackApiException | IOException e) {
-////            log.error(e.getMessage());
-//        }
-//    }
 
     @Value(value = "${slack.token}")
     String token;
@@ -36,7 +24,7 @@ public class SlackMessageHandler {
                     .channel(slackMessageData.getChannel())
                     .text(slackMessageData.getMessage()));
         } catch (SlackApiException | IOException e) {
-//            log.error(e.getMessage());
+            e.printStackTrace();
         }
     }
 }

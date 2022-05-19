@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 public class ProducerServiceImpl implements ProducerService {
 
     private static final Logger logger = LoggerFactory.getLogger(ProducerServiceImpl.class);
-//    private static final String TOPIC = "slack-topic";
     private final KafkaTemplate<String, Object> kafkaTemplate;
 
     public ProducerServiceImpl(KafkaTemplate<String, Object> kafkaTemplate) {
