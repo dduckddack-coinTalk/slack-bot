@@ -21,9 +21,7 @@ public class ConsumerServiceImpl implements ConsumerService {
         this.slackMessageHandler = slackMessageHandler;
     }
 
-//    @KafkaListener(topics = "slack-topic", groupId = "slack-group", containerFactory = "pushEntityKafkaListenerContainerFactory")
-
-    // slack-topic 구독
+    // slack-topic 구독으로 Slack 채널에 메시지 전송
     @KafkaListener(topics = "slack-topic", groupId = "slack-group")
     public void slackTopicConsumer(@Payload String message, @Headers MessageHeaders messageHeaders) {
         logger.info(String.format("#### 카프카 소비자 데이터 ### : %s \n### 카프카 헤더 정보 ### : %s", message, messageHeaders));
@@ -33,7 +31,7 @@ public class ConsumerServiceImpl implements ConsumerService {
         topicMono.subscribe();
     }
 
-    // error-topic 구독
+    // error-topic 구독으로 Slack 채널에 메시지 전송
     @KafkaListener(topics = "error-topic", groupId = "error-group")
     public void errorTopicConsumer(@Payload String message, @Headers MessageHeaders messageHeaders) {
         logger.info(String.format("#### 카프카 소비자 데이터 ### : %s \n### 카프카 헤더 정보 ### : %s", message, messageHeaders));
@@ -43,7 +41,7 @@ public class ConsumerServiceImpl implements ConsumerService {
         topicMono.subscribe();
     }
 
-    // news-topic 구독
+    // news-topic 구독으로 Slack 채널에 메시지 전송
     @KafkaListener(topics = "news-topic", groupId = "news-group")
     public void newsTopicConsumer(@Payload String message, @Headers MessageHeaders messageHeaders) {
         logger.info(String.format("#### 카프카 소비자 데이터 ### : %s \n### 카프카 헤더 정보 ### : %s", message, messageHeaders));

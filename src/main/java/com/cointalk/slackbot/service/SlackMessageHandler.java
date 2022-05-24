@@ -17,6 +17,7 @@ public class SlackMessageHandler {
     @Value(value = "${slack.token}")
     String token;
 
+    // Slack 토큰으로 채널에 에러 메시지 전송
     public void slackSendMessage(SlackMessageData slackMessageData){
         try{
             Slack slack = Slack.getInstance();

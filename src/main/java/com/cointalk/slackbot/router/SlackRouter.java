@@ -17,7 +17,7 @@ public class SlackRouter {
     @Bean
     public RouterFunction<ServerResponse> route(SlackHandler slackHandler) {
         return RouterFunctions
-                .route(POST("/test"), slackHandler::sendMessage)
+                .route(POST("/test"), slackHandler::sendMessage) // Slack에 메시지 전송 테스트용 코드
                 ;
     }
 }
